@@ -1,0 +1,46 @@
+{
+  "name": "sunshine-track",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
+  },
+  "keywords": [],
+  "license": "ISC",
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
+    "@rollup/plugin-commonjs": "^25.0.3",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.1",
+    "@typescript-eslint/parser": "^6.2.1",
+    "commitizen": "^4.3.0",
+    "eslint": "^8.46.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.1",
+    "rollup": "^3.27.0",
+    "rollup-plugin-dts": "^5.3.1",
+    "rollup-plugin-typescript2": "^0.35.0",
+    "rollup-plugin-uglify": "^6.0.4",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.196",
+    "@types/ua-parser-js": "^0.7.36",
+    "error-stack-parser": "^2.1.4",
+    "js-base64": "^3.7.5",
+    "lodash": "^4.17.21",
+    "pako": "^2.1.0",
+    "rrweb": "2.0.0-alpha.4",
+    "tslib": "^2.6.1",
+    "ua-parser-js": "^1.0.35",
+    "web-vitals": "^3.4.0"
+  }
+}

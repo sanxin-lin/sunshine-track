@@ -1,0 +1,19 @@
+{
+  "name": "@sunshine-track/recordscreen",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "module": "dist/index.esm.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "author": "sunshine_lin",
+  "scripts": {},
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "@sunshine-track/types": "workspace:^1.0.0",
+    "@sunshine-track/utils": "workspace:^1.0.0"
+  }
+}

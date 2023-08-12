@@ -1,0 +1,20 @@
+{
+  "name": "@sunshine-track/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.esm.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "author": "sunshine_lin",
+  "scripts": {},
+  "keywords": [],
+  "license": "ISC",
+  "dependencies": {
+    "@sunshine-track/configs": "workspace:*",
+    "@sunshine-track/types": "workspace:*",
+    "@sunshine-track/utils": "workspace:*"
+  }
+}

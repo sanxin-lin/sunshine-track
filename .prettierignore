@@ -1,0 +1,6 @@
+dist
+.husky
+node_modules
+.gitignore
+.eslintignore
+.prettierignore

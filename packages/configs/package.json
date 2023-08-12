@@ -1,0 +1,15 @@
+{
+  "name": "@sunshine-track/configs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "module": "dist/index.esm.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "author": "sunshine_lin",
+  "scripts": {
+  },
+  "license": "ISC"
+}
