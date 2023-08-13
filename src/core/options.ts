@@ -80,6 +80,7 @@ class Options {
       whitescreen,
       hashchange,
       history,
+      performance
       // recordScreen,
     } = this.getSwitchs();
     this.switchMap[EventType.XHR] = xhr;
@@ -88,7 +89,7 @@ class Options {
     this.switchMap[EventType.WhiteScreen] = whitescreen;
     this.switchMap[EventType.HashChange] = hashchange;
     this.switchMap[EventType.History] = history;
-    // this.switchMap[EventType.] = recordScreen
+    this.switchMap[EventType.Performance] = performance
   }
 
   getSwitchMap() {
@@ -128,6 +129,7 @@ class Options {
       hashchange = false,
       history = false,
       recordScreen = false,
+      performance = false
     } = switchs;
 
     return {
@@ -138,6 +140,7 @@ class Options {
       hashchange,
       history,
       recordScreen,
+      performance
     };
   }
 

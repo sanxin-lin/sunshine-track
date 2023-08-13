@@ -43,6 +43,7 @@ export const enum StatusType {
 
 export const enum EventType {
   WhiteScreen = 'white_screen',
+  Performance = 'performance',
   XHR = 'xhr',
   Fetch = 'fetch',
   Error = 'error',

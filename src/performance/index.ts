@@ -4,7 +4,7 @@ import { getWebVitals } from './performance';
 import { StatusType } from '../types';
 
 export default class WebPerformance {
-  init({ report }: any) {
+  constructor({ report }: any) {
     // 获取FCP、LCP、TTFB、FID等指标
     getWebVitals((res: any) => {
       // name指标名称、rating 评级、value数值

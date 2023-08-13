@@ -4,11 +4,11 @@ import { default as reportData } from "./report";
 import { getTimestamp } from "../utils";
 import eventTrack from "./event/event";
 
-const use = (plugin: any, option?: any) => {
-  const instance = new plugin(option || {});
+// const use = (plugin: any, option?: any) => {
+//   const instance = new plugin(option || {});
 
-  instance.init({ report: reportData });
-}
+//   instance.init({ report: reportData });
+// }
 
 const add = (params: ICustomEventParams) => {
   const { type, time, data } = params
@@ -34,7 +34,7 @@ const sunshineTrack = {
   install,
   errorBoundary,
   init,
-  use,
+  // use,
   add,
   report
 }

@@ -29,6 +29,7 @@ export interface ISwitch {
   hashchange: boolean;
   history: boolean;
   recordScreen: boolean;
+  performance: boolean
 }
 
 export type SwitchMap = Record<EventType, boolean>;

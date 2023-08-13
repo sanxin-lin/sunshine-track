@@ -2,10 +2,12 @@ import { HttpData, EventType } from '../../../types';
 import { addListenOrReplace } from './replace';
 import EventCollection from '../../event';
 import options from '../../options';
+import WebPerformance from '../../../performance'
+import report from '../../report';
 
 export const setupReplace = () => {
   const siwtchMap = options.getSwitchMap();
-  const globalClickListeners = options.getGlobalClickListeners()
+  const globalClickListeners = options.getGlobalClickListeners();
   globalClickListeners.length &&
     addListenOrReplace({
       type: EventType.Click,
@@ -50,4 +52,7 @@ export const setupReplace = () => {
       type: EventType.WhiteScreen,
       callback: EventCollection[EventType.WhiteScreen],
     });
+  if (siwtchMap[EventType.Performance]) {
+    new WebPerformance({ report })
+  }
 };

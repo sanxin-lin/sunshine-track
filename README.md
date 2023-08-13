@@ -62,6 +62,7 @@ const options = {
     hashchange: true, // hash变化
     history: true, // history变化
     whitescreen: true // 白屏
+    performance: true // 页面性能
   },
 }
 
@@ -260,3 +261,4 @@ const reportTrack = () => {
 | ` switchs.whitescreen `   | 是否开启白屏检测上报 |  ` boolean ` |   ` false ` |
 | ` switchs.hashchange `   | 是否开启hash变化请求上报 |  ` boolean ` |   ` false ` |
 | ` switchs.history `   | 是否开启history变化上报 |  ` boolean ` |   ` false ` |
+| ` switchs.performance `   | 是否开启页面性能上报 |  ` boolean ` |   ` false ` |
