@@ -20,15 +20,15 @@
 
 选项 | 描述 | 类型 |  
 | ------ | ----------- |   ----------- |
-| uuid   | 上报数据的id |  string | 
-| type   | 上报数据的类型 | string | 
-| data   | 上报数据 |  any | 
-| time   | 上报时间 |  number | 
-| status   | 上报状态 |  string | 
-| domain   | 当前域名 |  string | 
-| href   | 当前网页路径 |  string | 
-| userAgent   | 当前user-agent |  string | 
-| deviceInfo   | 设备的相关信息 |  string | 
+| ` uuid `   | 上报数据的id |  ` string ` | 
+| ` type `  | 上报数据的类型 | ` string ` | 
+| `data `  | 上报数据 |  ` any ` | 
+| `time `   | 上报时间 |  ` number ` | 
+| `status `   | 上报状态 |  ` string ` | 
+| `domain `   | 当前域名 |  ` string ` | 
+| `href `   | 当前网页路径 |  ` string ` | 
+| `userAgent `   | 当前user-agent |  ` string ` | 
+| ` deviceInfo `   | 设备的相关信息 |  ` object ` | 
 
 ## 安装
 
