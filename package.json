@@ -1,14 +1,24 @@
 {
-  "name": "sunshine-track",
+  "name": "sunshine-track2",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "基于 行为上报，实现了 用户行为、错误监控、页面跳转、页面白屏检测、页面性能检测等上报功能。适用于 Vue、React、Angular 等框架",
+  "main": "dist/index.min.js",
+  "module": "dist/index.esm.js",
+  "author": "sunshine_lin",
   "type": "module",
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c"
   },
-  "keywords": [],
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "track",
+    "埋点",
+    "track sdk",
+    "前端埋点"
+  ],
   "license": "ISC",
   "devDependencies": {
     "@commitlint/cli": "^17.6.7",
@@ -29,9 +39,7 @@
     "rollup-plugin-typescript2": "^0.35.0",
     "rollup-plugin-uglify": "^6.0.4",
     "ts-loader": "^9.4.4",
-    "typescript": "^5.1.6"
-  },
-  "dependencies": {
+    "typescript": "^5.1.6",
     "@types/lodash": "^4.14.196",
     "@types/ua-parser-js": "^0.7.36",
     "error-stack-parser": "^2.1.4",
@@ -39,8 +47,14 @@
     "lodash": "^4.17.21",
     "pako": "^2.1.0",
     "rrweb": "2.0.0-alpha.4",
-    "tslib": "^2.6.1",
     "ua-parser-js": "^1.0.35",
     "web-vitals": "^3.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.6.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sanxin-lin/sunshine-track.git"
   }
 }
