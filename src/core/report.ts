@@ -3,6 +3,7 @@ import {
   IEventParams,
   IReportParams,
   IReportOptions,
+  RequestMethod,
 } from '../types';
 import {
   __sunshine_track__,
@@ -12,18 +13,19 @@ import {
   getUserAgent,
   Queue,
   log,
+  isSupportFetch,
 } from '../utils';
-import isFunction from 'lodash/isFunction'
-import isArray from 'lodash/isArray'
+import isFunction from 'lodash/isFunction';
+import isArray from 'lodash/isArray';
 
 export class Report {
   private queue = new Queue();
   private options!: IReportOptions;
-  recordScreenEnable!: boolean
-  private uuid: string;
+  recordScreenEnable!: boolean;
+  // private uuid: string;
 
   constructor() {
-    this.uuid = getUUID();
+    // this.uuid = getUUID();
   }
 
   setOptions(options: IReportOptions) {
@@ -32,7 +34,7 @@ export class Report {
 
   getCommonReportData(): ICommonReportParams {
     return {
-      uuid: this.uuid,
+      uuid: getUUID(),
       domain: getCurrentDomain(),
       href: getCurrentHref(),
       userAgent: getUserAgent(),
@@ -48,13 +50,11 @@ export class Report {
   }
 
   async send(data: IEventParams | IEventParams[]) {
-    
-    const currentData = isArray(data) ? data : [data]
+    const currentData = isArray(data) ? data : [data];
 
-    const { url, format, customReport, reportType = 'http' } = this.options
+    const { url, format, customReport, reportType = 'http' } = this.options;
 
-    let result = currentData.map(item => this.getReportData(item))
-
+    let result = currentData.map(item => this.getReportData(item));
 
     // 开启录屏，由@sunshine-track/recordScreen 插件控制 （暂不做）
     // if (this.recordScreenEnable) {
@@ -66,11 +66,11 @@ export class Report {
     // }
     result = isFunction(format) ? format(result) : result;
 
-    log('Report data：', result)
+    log('Report data：', result);
 
     if (isFunction(customReport)) {
-      customReport(result)
-      return
+      customReport(result);
+      return;
     }
 
     if (result) {
@@ -79,10 +79,10 @@ export class Report {
           this.beaconReport(url, result);
           break;
         case 'img':
-          this.imgReport(url, result)
-          break
+          this.imgReport(url, result);
+          break;
         default:
-          this.httpReport(url, result)
+          this.httpReport(url, result);
           break;
       }
     }
@@ -92,17 +92,57 @@ export class Report {
     return navigator.sendBeacon(url, JSON.stringify(data));
   }
 
-  async httpReport(url: string, data: IReportParams[]): Promise<void> {
+  async fetchReport(url: string, data: IReportParams[]) {
+    const { headers } = this.options;
     const requestFun = () => {
       fetch(`${url}`, {
-        method: 'POST',
+        method: RequestMethod.POST,
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
+          ...headers,
         },
       });
     };
     this.queue.addFn(requestFun);
+  }
+
+  async xhrReport(url: string, data: IReportParams[]) {
+    const { headers } = this.options;
+
+    const requestFun = () => {
+      const xhr = new XMLHttpRequest();
+      xhr.open(RequestMethod.POST, url, true); // 指定请求方法和地址
+
+      xhr.setRequestHeader('Content-Type', 'application/json'); // 设置请求头（可选，根据实际需求设置）
+
+      const headerKeys = Object.keys(headers);
+
+      if (headerKeys.length) {
+        headerKeys.forEach(key => {
+          xhr.setRequestHeader(key, headers[key]);
+        });
+      }
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          // 请求完成且响应状态为200
+          var response = JSON.parse(xhr.responseText); // 解析响应数据
+          console.log(response); // 处理响应数据
+        }
+      };
+
+      xhr.send(JSON.stringify(data));
+    };
+    this.queue.addFn(requestFun);
+  }
+
+  async httpReport(url: string, data: IReportParams[]): Promise<void> {
+    if (isSupportFetch()) {
+      this.fetchReport(url, data);
+    } else {
+      this.xhrReport(url, data)
+    }
   }
 
   imgReport(url: string, data: IReportParams[]): void {

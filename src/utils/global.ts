@@ -25,3 +25,8 @@ __sunshine_track__.deviceInfo = {
   deviceType: ua.device.type ?? UNKNOWN,
   deviceVendor: ua.device.vendor ?? UNKNOWN,
 };
+
+
+export const isSupportFetch = () => {
+  return 'fetch' in _global
+}

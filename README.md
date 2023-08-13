@@ -10,7 +10,7 @@
 - ✅ 用户手动上报：提供 ` Vue 自定义指令` 以及` add、report `函数，实现用户手动上报
 - ✅ 自定义上报：提供 ` 格式化上报数据、自定义上报函数 `等配置项，更灵活地上报数据
 - ✅ 请求数据上报：提供 ` 检测请求返回、过滤请求 ` 等配置项，让用户决定上报哪些请求数据
-- ✅ 上报方式：提供 ` 上报方式 ` 配置项，用户可选择 ` img、http、beacon ` 三种方式
+- ✅ 上报方式：提供 ` 上报方式 ` 配置项，用户可选择 ` img、http、beacon ` 三种方式，` http `方式又支持 ` xhr、fetch ` 两种，且支持 ` 自定义headers `
 - ✅ 上报数据缓存：可配置 ` 本地缓存、浏览器本地缓存、IndexedDB ` 三种方式
 - ✅ 上报数据阈值：可配置上报数据 ` 阈值 ` ，达到 ` 阈值 ` 后进行上报操作
 - ✅ 全局点击上报：可通过配置 ` 选择器、元素文本 `，对全局DOM节点进行点击上报
@@ -246,7 +246,7 @@ const reportTrack = () => {
 | ` userId `   | 用户id | ` string ` |   - |
 | ` report.url `   | 上报url |  ` string ` |   - |
 | ` report.reportType `  | 上报方式 |  ` img、http、beacon ` |   ` http ` |
-| ` report.headers `  | 上报自定义请求头 |  ` object ` |   - |
+| ` report.headers `  | 上报自定义请求头，` http ` 上报模式生效 |  ` object ` |   - |
 | ` report.format `  | 上报数据格式化 |  ` function ` |   - |
 | ` report.customReport `  | 自定义上报 |  ` function ` |  - |
 | ` cacheType `   | 数据缓存方式 |  ` normal、storage、db ` |   ` normal ` |

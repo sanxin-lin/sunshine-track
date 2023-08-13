@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 import isFunction from 'lodash/isFunction';
 import { Callback, IReplaceParams, RequestMethod, voidFunc, EventType } from '../../../types';
-import { on, _global, getHref, getTimestamp, EventEmitter } from '../../../utils';
+import { on, _global, getHref, getTimestamp, EventEmitter, isSupportFetch } from '../../../utils';
 import options from '../../options';
 
 const eventEmitter = new EventEmitter();
@@ -15,12 +15,11 @@ const subscribe = (type: EventType, callback: Callback) => {
 }
 
 // 判断请求的 url 需不需要过滤
-const checkIsDisabledUrl = (url: string, method: RequestMethod) => {
+const checkIsDisabledUrl = (url: string, method: string) => {
   const { filterHttpUrl, report } = options.get()
   const { url: reportUrl } = report
   const isReportUrl = reportUrl === url && method === RequestMethod.POST
   const isFilterHttpUrl = isFunction(filterHttpUrl) && filterHttpUrl(url, method)
-
   return isReportUrl || isFilterHttpUrl
 }
 
@@ -92,7 +91,7 @@ const replaceXhr = () => {
         el: this,
         eventName: 'loadend',
         event(this: any) {
-          if (checkIsDisabledUrl(method, url)) return
+          if (checkIsDisabledUrl(url, method)) return
 
           const { responseType, response, status } = this;
           this.trackParams.requestData = requestData;
@@ -114,7 +113,7 @@ const replaceXhr = () => {
 };
 
 function replaceFetch(): void {
-  if (!('fetch' in _global)) {
+  if (!isSupportFetch()) {
     return;
   }
   replaceAop(_global, 'fetch', originalFetch => {
@@ -143,7 +142,7 @@ function replaceFetch(): void {
             time: sTime,
           });
           tempRes.text().then((data: any) => {
-            if (checkIsDisabledUrl(method, url)) return
+            if (checkIsDisabledUrl(url, method)) return
             const { checkHttpStatus } = options.get()
             // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
             if (isFunction(checkHttpStatus)) {
@@ -155,7 +154,7 @@ function replaceFetch(): void {
         },
         // 接口报错
         (err: any) => {
-          if (checkIsDisabledUrl(method, url)) return
+          if (checkIsDisabledUrl(url, method)) return
           const eTime = getTimestamp();
           fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,
