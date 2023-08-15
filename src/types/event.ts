@@ -103,6 +103,7 @@ export interface IResouceError {
 }
 
 export interface ICommonReportParams {
+  userId: string;
   domain: string;
   href: string;
   uuid: string;

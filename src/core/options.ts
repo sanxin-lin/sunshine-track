@@ -12,6 +12,7 @@ import isArray from 'lodash/isArray';
 import uniqBy from 'lodash/uniqBy';
 import eventTrack from './event/event';
 import report from './report';
+import isFunction from 'lodash/isFunction';
 
 const getInitOptions = (): IOptions => ({
   projectKey: '',
@@ -26,6 +27,7 @@ const getInitOptions = (): IOptions => ({
   whiteBoxElements: ['html', 'body', '#app', '#root'],
   skeletonProject: false,
   maxEvents: 10,
+  historyUrlsNum: 3
 });
 
 class Options {
@@ -49,6 +51,7 @@ class Options {
       maxEvents = 10,
       filterHttpUrl,
       checkHttpStatus,
+      historyUrlsNum
     } = this.options;
     return {
       projectKey,
@@ -62,6 +65,7 @@ class Options {
       maxEvents,
       filterHttpUrl,
       checkHttpStatus,
+      historyUrlsNum
     };
   }
 
@@ -144,6 +148,18 @@ class Options {
     };
   }
 
+  getHeaders() {
+    const { headers = {} } = this.getReport()
+
+    return isFunction(headers) ? headers() : headers
+  }
+
+  getUserId() {
+    const { userId } = this.options
+
+    return isFunction(userId) ? userId() : userId
+  }
+
   // getCustomReportFn() {
   //     const { customReport } = this.options
   //     return customReport
@@ -166,13 +182,16 @@ __sunshine_track__.options = options;
 
 export const setupOptions = (o: IOptions) => {
   options.set(o);
-  const { report: reportOptions, cacheType, maxEvents, projectKey, log } = options.get();
+  const { report: reportOptions, cacheType, maxEvents, projectKey, log, userId } = options.get();
   eventTrack.setOptions({
     cacheType,
     projectKey,
     maxEvents
   });
-  report.setOptions(reportOptions);
+  report.setOptions({
+    ...reportOptions,
+    userId
+  });
   setLogFlag(log)
 };
 

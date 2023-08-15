@@ -2,8 +2,9 @@ import {
   ICommonReportParams,
   IEventParams,
   IReportParams,
-  IReportOptions,
   RequestMethod,
+  IReportClassOptions,
+  Callback,
 } from '../types';
 import {
   __sunshine_track__,
@@ -20,7 +21,7 @@ import isArray from 'lodash/isArray';
 
 export class Report {
   private queue = new Queue();
-  private options!: IReportOptions;
+  private options!: IReportClassOptions;
   recordScreenEnable!: boolean;
   // private uuid: string;
 
@@ -28,12 +29,25 @@ export class Report {
     // this.uuid = getUUID();
   }
 
-  setOptions(options: IReportOptions) {
+  getHeaders() {
+    const { headers = {} } = this.options
+
+    return isFunction(headers) ? headers() : headers
+  }
+
+  getUserId() {
+    const { userId } = this.options
+
+    return isFunction(userId) ? userId() : userId
+  }
+
+  setOptions(options: IReportClassOptions) {
     this.options = options;
   }
 
   getCommonReportData(): ICommonReportParams {
     return {
+      userId: this.getUserId(),
       uuid: getUUID(),
       domain: getCurrentDomain(),
       href: getCurrentHref(),
@@ -49,10 +63,10 @@ export class Report {
     };
   }
 
-  async send(data: IEventParams | IEventParams[]) {
+  async send(data: IEventParams | IEventParams[], beforeSend?: Callback) {
     const currentData = isArray(data) ? data : [data];
 
-    const { url, format, customReport, reportType = 'http' } = this.options;
+    const { url, format, customReport, reportType = 'http', isReport } = this.options;
 
     let result = currentData.map(item => this.getReportData(item));
 
@@ -66,7 +80,14 @@ export class Report {
     // }
     result = isFunction(format) ? format(result) : result;
 
+    if (isFunction(isReport) && !isReport(result)) {
+      log('Cancel Report', result)
+      return
+    }
+
     log('Report data：', result);
+
+    beforeSend?.()
 
     if (isFunction(customReport)) {
       customReport(result);
@@ -93,14 +114,13 @@ export class Report {
   }
 
   async fetchReport(url: string, data: IReportParams[]) {
-    const { headers } = this.options;
     const requestFun = () => {
       fetch(`${url}`, {
         method: RequestMethod.POST,
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
-          ...headers,
+          ...(this.getHeaders()),
         },
       });
     };
@@ -108,7 +128,6 @@ export class Report {
   }
 
   async xhrReport(url: string, data: IReportParams[]) {
-    const { headers } = this.options;
 
     const requestFun = () => {
       const xhr = new XMLHttpRequest();
@@ -116,6 +135,7 @@ export class Report {
 
       xhr.setRequestHeader('Content-Type', 'application/json'); // 设置请求头（可选，根据实际需求设置）
 
+      const headers = this.getHeaders()
       const headerKeys = Object.keys(headers);
 
       if (headerKeys.length) {
@@ -125,11 +145,10 @@ export class Report {
       }
 
       xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          // 请求完成且响应状态为200
-          var response = JSON.parse(xhr.responseText); // 解析响应数据
-          console.log(response); // 处理响应数据
-        }
+        // if (xhr.readyState === 4 && xhr.status === 200) {
+        //   // 请求完成且响应状态为200
+        //   var response = JSON.parse(xhr.responseText); // 解析响应数据
+        // }
       };
 
       xhr.send(JSON.stringify(data));
@@ -141,7 +160,7 @@ export class Report {
     if (isSupportFetch()) {
       this.fetchReport(url, data);
     } else {
-      this.xhrReport(url, data)
+      this.xhrReport(url, data);
     }
   }
 

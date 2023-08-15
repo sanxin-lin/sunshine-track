@@ -18,6 +18,56 @@ import { openWhiteScreen } from '../setup/whiteScreen';
 import options from '../options';
 import report from '../report';
 import { httpTransform, resourceTransform } from '../transform';
+import takeRight from 'lodash/takeRight'
+
+const hashCallback = () => {
+  let urls: any[] = []
+  return (data: HashChangeEvent) => {
+    const { historyUrlsNum } = options.get()
+    const { oldURL, newURL } = data;
+    const { relative: from } = parseUrlToObj(oldURL);
+    const { relative: to } = parseUrlToObj(newURL);
+    if (to) {
+      urls.push(to)
+    }
+    urls = takeRight(urls, historyUrlsNum)
+    eventTrack.add({
+      type: EventType.HashChange,
+      data: {
+        from,
+        to,
+        urls
+      },
+      status: StatusType.Ok,
+      time: getTimestamp(),
+    });
+  }
+}
+
+const historyCallback = () => {
+  let urls: any[] = []
+  return (data: IRouteParams) => {
+    const { historyUrlsNum } = options.get()
+    const { from, to } = data;
+    const { relative: currentFrom } = parseUrlToObj(from);
+    const { relative: currentTo } = parseUrlToObj(to);
+    const isSame = currentFrom === currentTo
+    if (!isSame) {
+      urls.push(to)
+      urls = takeRight(urls, historyUrlsNum)
+      eventTrack.add({
+        type: EventType.History,
+        data: {
+          from: currentFrom || '/',
+          to: currentTo || '/',
+          urls
+        },
+        status: StatusType.Ok,
+        time: getTimestamp(),
+      });
+    }
+  }
+}
 
 const EventCollection = {
   [EventType.Click]: (e: PointerEvent) => {
@@ -59,34 +109,8 @@ const EventCollection = {
       });
     }
   },
-  [EventType.HashChange]: (data: HashChangeEvent) => {
-    const { oldURL, newURL } = data;
-    const { relative: from } = parseUrlToObj(oldURL);
-    const { relative: to } = parseUrlToObj(newURL);
-    eventTrack.add({
-      type: EventType.HashChange,
-      data: {
-        from,
-        to,
-      },
-      status: StatusType.Ok,
-      time: getTimestamp(),
-    });
-  },
-  [EventType.History]: (data: IRouteParams) => {
-    const { from, to } = data;
-    const { relative: currentFrom } = parseUrlToObj(from);
-    const { relative: currentTo } = parseUrlToObj(to);
-    eventTrack.add({
-      type: EventType.History,
-      data: {
-        from: currentFrom || '/',
-        to: currentTo || '/',
-      },
-      status: StatusType.Ok,
-      time: getTimestamp(),
-    });
-  },
+  [EventType.HashChange]: hashCallback(),
+  [EventType.History]: historyCallback(),
   [EventType.WhiteScreen]: () => {
     const { whiteBoxElements, skeletonProject } = options.get();
     openWhiteScreen(

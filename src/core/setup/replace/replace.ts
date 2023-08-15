@@ -45,6 +45,38 @@ const listenHashChange = () => {
   });
 };
 
+let preHref: string = getHref();
+const replaceHistory = () => {
+  const onPopstate = _global.onpopstate;
+  _global.onpopstate = function (this: any, ...args: any) {
+    const to = getHref();
+    const from = preHref;
+    preHref = to;
+    emit(EventType.History, {
+      from,
+      to,
+    });
+    onPopstate?.apply(this, args);
+  };
+  const replaceFn = (originalFn: voidFunc): voidFunc => {
+    return function (this: any, ...args: any[]) {
+      const url = args?.[2];
+      if (url) {
+        const from = preHref;
+        const to = url;
+        preHref = to;
+        emit(EventType.History, {
+          from,
+          to,
+        });
+      }
+      return originalFn.apply(this, args);
+    };
+  };
+  replaceAop(_global.history, 'pushState', replaceFn);
+  replaceAop(_global.history, 'replaceState', replaceFn);
+};
+
 const listenError = () => {
   on({
     el: _global,
@@ -168,38 +200,6 @@ function replaceFetch(): void {
     };
   });
 }
-
-let preHref: string = getHref();
-const replaceHistory = () => {
-  const onPopstate = _global.onpopstate;
-  _global.onpopstate = function (this: any, ...args: any) {
-    const to = getHref();
-    const from = preHref;
-    preHref = to;
-    emit(EventType.History, {
-      from,
-      to,
-    });
-    onPopstate?.apply(this, args);
-  };
-  const replaceFn = (originalFn: voidFunc): voidFunc => {
-    return function (this: any, ...args: any[]) {
-      const url = args?.[2];
-      if (url) {
-        const from = preHref;
-        const to = url;
-        preHref = to;
-        emit(EventType.History, {
-          from,
-          to,
-        });
-      }
-      return originalFn.apply(this, args);
-    };
-  };
-  replaceAop(_global.history, 'pushState', replaceFn);
-  replaceAop(_global.history, 'replaceState', replaceFn);
-};
 
 const listenOrReplace = (type: EventType) => {
   switch (type) {

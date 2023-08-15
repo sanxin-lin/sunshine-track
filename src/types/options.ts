@@ -4,11 +4,12 @@ type ICustomReport = (data: IReportParams[]) => any
 
 // type ReportType = 'poll' | 'realtime';
 export interface IReportOptions {
-  headers?: any;
+  headers?: Object | (() => Object);
   url: string;
   reportType?: 'img' | 'http' | 'beacon'
   format?: (data: any[]) => any;
-  customReport?: ICustomReport
+  customReport?: ICustomReport;
+  isReport?: (data: any[]) => boolean
 }
 
 export type CacheType = 'normal' | 'storage' | 'db';
@@ -19,7 +20,7 @@ export interface IGlobalClickListenerItem {
   data?: string;
 }
 
-type UserIdType = string | (() => string);
+export type UserIdType = string | (() => string);
 
 export interface ISwitch {
   xhr: boolean;
@@ -46,7 +47,11 @@ export interface IOptions {
   switchs?: Partial<ISwitch>;
   maxEvents?: number;
   checkHttpStatus?: (data: any) => boolean;
-  filterHttpUrl?: (url: string, method: string) => boolean
+  filterHttpUrl?: (url: string, method: string) => boolean;
+  historyUrlsNum?: number;
 }
 
 export type PartialOptions = Partial<IOptions>;
+
+
+export type IReportClassOptions = IReportOptions & { userId: UserIdType }

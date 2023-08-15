@@ -1,5 +1,6 @@
 import { _global, __sunshine_track__ } from '../../utils';
 import { StatusType } from '../../types';
+import isString from 'lodash/isString'
 
 /**
  * 检测页面是否白屏
@@ -37,10 +38,9 @@ export function openWhiteScreen(
 
   // 选中dom点的名称
   function getSelector(element: any) {
-    if (element.id) {
+    if (isString(element.id)) {
       return '#' + element.id;
-    } else if (element.className) {
-      // div home => div.home
+    } else if (isString(element.className)) {
       return (
         '.' +
         element.className

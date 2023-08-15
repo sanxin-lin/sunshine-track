@@ -6,9 +6,9 @@
 
 ` sunshine-track `具备以下功能：
 
-- ✅ 用户行为上报：包括 ` 点击、跳转页面、请求 ` 等
+- ✅ 用户行为上报：包括 ` 点击、跳转页面、跳转页面记录数组、请求 ` 等
 - ✅ 用户手动上报：提供 ` Vue 自定义指令` 以及` add、report `函数，实现用户手动上报
-- ✅ 自定义上报：提供 ` 格式化上报数据、自定义上报函数 `等配置项，更灵活地上报数据
+- ✅ 自定义上报：提供 ` 格式化上报数据、自定义上报函数、自定义决定上不上报 ` 等配置项，更灵活地上报数据
 - ✅ 请求数据上报：提供 ` 检测请求返回、过滤请求 ` 等配置项，让用户决定上报哪些请求数据
 - ✅ 上报方式：提供 ` 上报方式 ` 配置项，用户可选择 ` img、http、beacon ` 三种方式，` http `方式又支持 ` xhr、fetch ` 两种，且支持 ` 自定义headers `
 - ✅ 上报数据缓存：可配置 ` 本地缓存、浏览器本地缓存、IndexedDB ` 三种方式
@@ -163,7 +163,7 @@ app.use(Track, {
 })
 ```
 
-### 格式化上报数据、自定义上报
+### 格式化上报数据、自定义决定上不上报、自定义上报
 
 如果你想在数据上报之前，格式化上报数据的话，可以配置` report `中的` format `
 
@@ -179,6 +179,22 @@ app.use(Track, {
       // format v
 
       return v
+    }     
+  }
+})
+```
+
+如果你想要自己决定某次上报的时候，进行取消，可以配置` report `中的` isReport `
+
+```js
+app.use(Track, {
+  ...options,
+  report: {
+    url: 'http://example.com/report',
+    reportType: 'img',
+    isReport: (data) => { // 返回一个布尔值决定要不要上报
+      
+      return true
     }     
   }
 })
@@ -249,10 +265,12 @@ const reportTrack = () => {
 | ` report.headers `  | 上报自定义请求头，` http ` 上报模式生效 |  ` object ` |   - |
 | ` report.format `  | 上报数据格式化 |  ` function ` |   - |
 | ` report.customReport `  | 自定义上报 |  ` function ` |  - |
+| ` report.isReport `  | 自定义决定上不上报 |  ` function ` |  - |
 | ` cacheType `   | 数据缓存方式 |  ` normal、storage、db ` |   ` normal ` |
 | ` globalClickListeners `   | 上报状态 |  ` array ` |   - |
 | ` log `   | 当前域名 |  ` boolean ` |   ` false ` |
 | ` maxEvents `   | 上报阈值 |  ` number ` |   ` 10 ` |
+| ` historyUrlsNum `   | 需要记录的url跳转数组 |  ` number ` |   ` 3 ` |
 | ` checkHttpStatus `   | 判断响应数据 |  ` function ` |   - |
 | ` filterHttpUrl `   | 过滤上报请求数据 |  ` function ` |   - |
 | ` switchs.xhr `   | 是否开启xhr请求上报 |  ` boolean ` |   ` false ` |

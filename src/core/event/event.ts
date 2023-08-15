@@ -75,7 +75,7 @@ export class EventTrack {
 
   async report(data: IEventParams[]) {
     await this.clearReportData()
-    report.send(data)
+    report.send(data, () => this.clearReportData())
   }
 }
 
