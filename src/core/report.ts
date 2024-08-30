@@ -16,8 +16,7 @@ import {
   log,
   isSupportFetch,
 } from '../utils';
-import isFunction from 'lodash/isFunction';
-import isArray from 'lodash/isArray';
+import { isFunction, isArray } from 'lodash-es';
 
 export class Report {
   private queue = new Queue();
@@ -30,15 +29,15 @@ export class Report {
   }
 
   getHeaders() {
-    const { headers = {} } = this.options
+    const { headers = {} } = this.options;
 
-    return isFunction(headers) ? headers() : headers
+    return isFunction(headers) ? headers() : headers;
   }
 
   getUserId() {
-    const { userId } = this.options
+    const { userId } = this.options;
 
-    return isFunction(userId) ? userId() : userId
+    return isFunction(userId) ? userId() : userId;
   }
 
   setOptions(options: IReportClassOptions) {
@@ -81,13 +80,13 @@ export class Report {
     result = isFunction(format) ? format(result) : result;
 
     if (isFunction(isReport) && !isReport(result)) {
-      log('Cancel Report', result)
-      return
+      log('Cancel Report', result);
+      return;
     }
 
     log('Report data：', result);
 
-    beforeSend?.()
+    beforeSend?.();
 
     if (isFunction(customReport)) {
       customReport(result);
@@ -120,7 +119,7 @@ export class Report {
         body: JSON.stringify(data),
         headers: {
           'Content-Type': 'application/json',
-          ...(this.getHeaders()),
+          ...this.getHeaders(),
         },
       });
     };
@@ -128,14 +127,13 @@ export class Report {
   }
 
   async xhrReport(url: string, data: IReportParams[]) {
-
     const requestFun = () => {
       const xhr = new XMLHttpRequest();
       xhr.open(RequestMethod.POST, url, true); // 指定请求方法和地址
 
       xhr.setRequestHeader('Content-Type', 'application/json'); // 设置请求头（可选，根据实际需求设置）
 
-      const headers = this.getHeaders()
+      const headers = this.getHeaders();
       const headerKeys = Object.keys(headers);
 
       if (headerKeys.length) {

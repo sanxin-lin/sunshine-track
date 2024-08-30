@@ -13,13 +13,12 @@ import {
   Queue,
   log,
 } from '@sunshine-track/utils';
-import isFunction from 'lodash/isFunction'
-import isArray from 'lodash/isArray'
+import { isFunction, isArray } from 'lodash-es';
 
 export class Report {
   private queue = new Queue();
   private options!: IReportOptions;
-  recordScreenEnable!: boolean
+  recordScreenEnable!: boolean;
   private uuid: string;
 
   constructor() {
@@ -48,13 +47,11 @@ export class Report {
   }
 
   async send(data: IEventParams | IEventParams[]) {
-    
-    const currentData = isArray(data) ? data : [data]
+    const currentData = isArray(data) ? data : [data];
 
-    const { url, format, customReport, reportType = 'http' } = this.options
+    const { url, format, customReport, reportType = 'http' } = this.options;
 
-    let result = currentData.map(item => this.getReportData(item))
-
+    let result = currentData.map(item => this.getReportData(item));
 
     // 开启录屏，由@sunshine-track/recordScreen 插件控制 （暂不做）
     // if (this.recordScreenEnable) {
@@ -66,11 +63,11 @@ export class Report {
     // }
     result = isFunction(format) ? format(result) : result;
 
-    log('Report data：', result)
+    log('Report data：', result);
 
     if (isFunction(customReport)) {
-      customReport(result)
-      return
+      customReport(result);
+      return;
     }
 
     if (result) {
@@ -79,10 +76,10 @@ export class Report {
           this.beaconReport(url, result);
           break;
         case 'img':
-          this.imgReport(url, result)
-          break
+          this.imgReport(url, result);
+          break;
         default:
-          this.httpReport(url, result)
+          this.httpReport(url, result);
           break;
       }
     }

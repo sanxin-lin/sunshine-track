@@ -7,9 +7,7 @@ import type {
   SwitchMap,
 } from '@sunshine-track/types';
 import { PropType, EventType } from '@sunshine-track/types';
-import merge from 'lodash/merge';
-import isArray from 'lodash/isArray';
-import uniqBy from 'lodash/uniqBy';
+import { merge, isArray, uniqBy } from 'lodash-es'
 import eventTrack from './event/event';
 import report from './report';
 

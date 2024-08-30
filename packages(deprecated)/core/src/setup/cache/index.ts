@@ -1,11 +1,8 @@
 import type { IOptions } from '@sunshine-track/types';
-import isArray from 'lodash/isArray';
-import {
-  checkIsIndexedDBSupported,
-  warning,
-} from '@sunshine-track/utils';
-import options from '../../options'
-import { db, storage } from './cache'
+import { isArray } from 'lodash-es';
+import { checkIsIndexedDBSupported, warning } from '@sunshine-track/utils';
+import options from '../../options';
+import { db, storage } from './cache';
 
 const setupStorage = (projectKey: string) => {
   const v = storage.getItem(projectKey);
@@ -20,7 +17,7 @@ const setupDB = async (projectKey: string) => {
       throw new Error('IndexedDB is not supported in this browser.');
     }
     await db.init({
-      dbName: projectKey
+      dbName: projectKey,
     });
   } catch (e) {
     warning('db is close');

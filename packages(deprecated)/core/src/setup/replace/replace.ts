@@ -1,5 +1,4 @@
-import throttle from 'lodash/throttle';
-import isFunction from 'lodash/isFunction';
+import { throttle, isFunction } from 'lodash-es';
 import { EventType } from '@sunshine-track/types';
 import { Callback, IReplaceParams, RequestMethod, voidFunc } from '@sunshine-track/types';
 import { on, _global, getHref, getTimestamp, EventEmitter } from '@sunshine-track/utils';
@@ -8,23 +7,22 @@ import options from '../../options';
 const eventEmitter = new EventEmitter();
 
 const emit = (type: EventType, data?: any) => {
-  eventEmitter.emit(type, data)
-}
+  eventEmitter.emit(type, data);
+};
 
 const subscribe = (type: EventType, callback: Callback) => {
-  eventEmitter.subscribe(type, callback)
-}
+  eventEmitter.subscribe(type, callback);
+};
 
 // 判断请求的 url 需不需要过滤
 const checkIsDisabledUrl = (url: string, method: RequestMethod) => {
-  const { filterHttpUrl, report } = options.get()
-  const { url: reportUrl } = report
-  const isReportUrl = reportUrl === url && method === RequestMethod.POST
-  const isFilterHttpUrl = isFunction(filterHttpUrl) && filterHttpUrl(url, method)
+  const { filterHttpUrl, report } = options.get();
+  const { url: reportUrl } = report;
+  const isReportUrl = reportUrl === url && method === RequestMethod.POST;
+  const isFilterHttpUrl = isFunction(filterHttpUrl) && filterHttpUrl(url, method);
 
-  return isReportUrl || isFilterHttpUrl
-}
-
+  return isReportUrl || isFilterHttpUrl;
+};
 
 const listenWindowClick = () => {
   on({
@@ -88,19 +86,19 @@ const replaceXhr = () => {
   replaceAop(xhrProto, 'send', (originalSend: voidFunc) => {
     return function (this: any, ...args: any[]): void {
       const [requestData] = args;
-      const { method, url } = this.trackParams
+      const { method, url } = this.trackParams;
       on({
         el: this,
         eventName: 'loadend',
         event(this: any) {
-          if (checkIsDisabledUrl(method, url)) return
+          if (checkIsDisabledUrl(method, url)) return;
 
           const { responseType, response, status } = this;
           this.trackParams.requestData = requestData;
           this.trackParams.Status = status;
           this.trackParams.elapsedTime = getTimestamp() - this.trackParams.time;
           if (['', 'json', 'text'].includes(responseType)) {
-            const { checkHttpStatus } = options.get()
+            const { checkHttpStatus } = options.get();
             // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
             if (isFunction(checkHttpStatus)) {
               this.trackParams.response = response && JSON.parse(response);
@@ -144,8 +142,8 @@ function replaceFetch(): void {
             time: sTime,
           });
           tempRes.text().then((data: any) => {
-            if (checkIsDisabledUrl(method, url)) return
-            const { checkHttpStatus } = options.get()
+            if (checkIsDisabledUrl(method, url)) return;
+            const { checkHttpStatus } = options.get();
             // 用户设置handleHttpStatus函数来判断接口是否正确，只有接口报错时才保留response
             if (isFunction(checkHttpStatus)) {
               fetchData.response = data;
@@ -156,7 +154,7 @@ function replaceFetch(): void {
         },
         // 接口报错
         (err: any) => {
-          if (checkIsDisabledUrl(method, url)) return
+          if (checkIsDisabledUrl(method, url)) return;
           const eTime = getTimestamp();
           fetchData = Object.assign({}, fetchData, {
             elapsedTime: eTime - sTime,

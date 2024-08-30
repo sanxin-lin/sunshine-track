@@ -1,10 +1,6 @@
-import isString from 'lodash/isString'
-import isNumber from 'lodash/isNumber'
-import isBoolean from 'lodash/isBoolean'
-import isUndefined from 'lodash/isUndefined'
-import isArray from 'lodash/isArray'
 import { PropType } from '../types'
 import { throwError } from './log'
+import { isPlainObject, isString, isNumber, isBoolean, isArray } from 'lodash-es'
 
 export const isValidString = <T>(target: T) => isString(target) && target !== ''
 export const validPhone = (target: string) => {
@@ -54,11 +50,8 @@ export const validTypes = (validItems: IValidItem[] = []) => {
 }
 
 export const unknownToString = (target: unknown) => {
-    if (isString(target)) {
-      return target as string;
+    if (isPlainObject(target) || isArray(target)) {
+        return JSON.stringify(target);
     }
-    if (isUndefined(target)) {
-      return 'undefined';
-    }
-    return JSON.stringify(target);
+    return String(target)
   }

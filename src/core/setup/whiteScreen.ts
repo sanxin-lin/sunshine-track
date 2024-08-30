@@ -1,6 +1,6 @@
 import { _global, __sunshine_track__ } from '../../utils';
 import { StatusType } from '../../types';
-import isString from 'lodash/isString'
+import { isString } from 'lodash-es';
 
 /**
  * 检测页面是否白屏

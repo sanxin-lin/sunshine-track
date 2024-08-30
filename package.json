@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "test:dev": "vitest"
   },
   "files": [
     "dist"
@@ -28,28 +29,29 @@
     "@rollup/plugin-commonjs": "^25.0.3",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.1.0",
+    "@types/lodash-es": "^4.17.12",
+    "@types/ua-parser-js": "^0.7.36",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
     "commitizen": "^4.3.0",
+    "error-stack-parser": "^2.1.4",
     "eslint": "^8.46.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
+    "js-base64": "^3.7.5",
     "lint-staged": "^13.2.3",
+    "lodash-es": "^4.17.21",
+    "pako": "^2.1.0",
     "prettier": "^3.0.1",
     "rollup": "^3.27.0",
     "rollup-plugin-dts": "^5.3.1",
     "rollup-plugin-typescript2": "^0.35.0",
     "rollup-plugin-uglify": "^6.0.4",
+    "rrweb": "2.0.0-alpha.4",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",
-    "@types/lodash": "^4.14.196",
-    "@types/ua-parser-js": "^0.7.36",
-    "error-stack-parser": "^2.1.4",
-    "js-base64": "^3.7.5",
-    "lodash": "^4.17.21",
-    "pako": "^2.1.0",
-    "rrweb": "2.0.0-alpha.4",
     "ua-parser-js": "^1.0.35",
+    "vitest": "^2.0.5",
     "web-vitals": "^3.4.0"
   },
   "dependencies": {

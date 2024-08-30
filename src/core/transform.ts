@@ -1,8 +1,14 @@
-import { HttpCode, HttpData, IResouceError, IResourceTarget, SpanStatus, StatusType } from '../types';
+import {
+  HttpCode,
+  HttpData,
+  IResouceError,
+  IResourceTarget,
+  SpanStatus,
+  StatusType,
+} from '../types';
 import { getTimestamp } from '../utils';
-import isString from 'lodash/isString'
-import isFunction from 'lodash/isFunction';
-import isObject from 'lodash/isObject';
+
+import { isString, isFunction, isObject } from 'lodash-es';
 import options from './options';
 
 export function interceptStr(str: string, interceptLength: number): string {
@@ -54,7 +60,7 @@ export function fromHttpStatus(httpStatus: any) {
 
 // 处理接口的状态
 export function httpTransform(data: HttpData): HttpData {
-  const { checkHttpStatus } = options.get()
+  const { checkHttpStatus } = options.get();
   let message: any = '';
   const { elapsedTime, time, method = '', type, Status = 200, response, requestData } = data;
   let status: StatusType;

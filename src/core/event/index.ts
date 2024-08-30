@@ -1,11 +1,5 @@
 import ErrorStackParser from 'error-stack-parser';
-import {
-  IRouteParams,
-  EventType,
-  type IErrorTarget,
-  HttpData,
-  StatusType,
-} from '../../types';
+import { IRouteParams, EventType, type IErrorTarget, HttpData, StatusType } from '../../types';
 import eventTrack from './event';
 import {
   getTargetDomByPointerEvent,
@@ -18,56 +12,56 @@ import { openWhiteScreen } from '../setup/whiteScreen';
 import options from '../options';
 import report from '../report';
 import { httpTransform, resourceTransform } from '../transform';
-import takeRight from 'lodash/takeRight'
+import { takeRight } from 'lodash-es';
 
 const hashCallback = () => {
-  let urls: any[] = []
+  let urls: any[] = [];
   return (data: HashChangeEvent) => {
-    const { historyUrlsNum } = options.get()
+    const { historyUrlsNum } = options.get();
     const { oldURL, newURL } = data;
     const { relative: from } = parseUrlToObj(oldURL);
     const { relative: to } = parseUrlToObj(newURL);
     if (to) {
-      urls.push(to)
+      urls.push(to);
     }
-    urls = takeRight(urls, historyUrlsNum)
+    urls = takeRight(urls, historyUrlsNum);
     eventTrack.add({
       type: EventType.HashChange,
       data: {
         from,
         to,
-        urls
+        urls,
       },
       status: StatusType.Ok,
       time: getTimestamp(),
     });
-  }
-}
+  };
+};
 
 const historyCallback = () => {
-  let urls: any[] = []
+  let urls: any[] = [];
   return (data: IRouteParams) => {
-    const { historyUrlsNum } = options.get()
+    const { historyUrlsNum } = options.get();
     const { from, to } = data;
     const { relative: currentFrom } = parseUrlToObj(from);
     const { relative: currentTo } = parseUrlToObj(to);
-    const isSame = currentFrom === currentTo
+    const isSame = currentFrom === currentTo;
     if (!isSame) {
-      urls.push(to)
-      urls = takeRight(urls, historyUrlsNum)
+      urls.push(to);
+      urls = takeRight(urls, historyUrlsNum);
       eventTrack.add({
         type: EventType.History,
         data: {
           from: currentFrom || '/',
           to: currentTo || '/',
-          urls
+          urls,
         },
         status: StatusType.Ok,
         time: getTimestamp(),
       });
     }
-  }
-}
+  };
+};
 
 const EventCollection = {
   [EventType.Click]: (e: PointerEvent) => {

@@ -1,18 +1,9 @@
 import { __sunshine_track__, setLogFlag, validTypes } from '../utils';
-import type {
-  CacheType,
-  IOptions,
-  ISwitch,
-  PartialOptions,
-  SwitchMap,
-} from '../types';
+import type { CacheType, IOptions, ISwitch, PartialOptions, SwitchMap } from '../types';
 import { PropType, EventType } from '../types';
-import merge from 'lodash/merge';
-import isArray from 'lodash/isArray';
-import uniqBy from 'lodash/uniqBy';
 import eventTrack from './event/event';
+import { merge, isArray, uniqBy, isFunction } from 'lodash-es';
 import report from './report';
-import isFunction from 'lodash/isFunction';
 
 const getInitOptions = (): IOptions => ({
   projectKey: '',
@@ -20,14 +11,14 @@ const getInitOptions = (): IOptions => ({
   report: {
     url: '',
     headers: {},
-    reportType: 'http'
+    reportType: 'http',
   },
   log: false,
   cacheType: 'normal',
   whiteBoxElements: ['html', 'body', '#app', '#root'],
   skeletonProject: false,
   maxEvents: 10,
-  historyUrlsNum: 3
+  historyUrlsNum: 3,
 });
 
 class Options {
@@ -51,7 +42,7 @@ class Options {
       maxEvents = 10,
       filterHttpUrl,
       checkHttpStatus,
-      historyUrlsNum
+      historyUrlsNum,
     } = this.options;
     return {
       projectKey,
@@ -65,7 +56,7 @@ class Options {
       maxEvents,
       filterHttpUrl,
       checkHttpStatus,
-      historyUrlsNum
+      historyUrlsNum,
     };
   }
 
@@ -84,7 +75,7 @@ class Options {
       whitescreen,
       hashchange,
       history,
-      performance
+      performance,
       // recordScreen,
     } = this.getSwitchs();
     this.switchMap[EventType.XHR] = xhr;
@@ -93,7 +84,7 @@ class Options {
     this.switchMap[EventType.WhiteScreen] = whitescreen;
     this.switchMap[EventType.HashChange] = hashchange;
     this.switchMap[EventType.History] = history;
-    this.switchMap[EventType.Performance] = performance
+    this.switchMap[EventType.Performance] = performance;
   }
 
   getSwitchMap() {
@@ -133,7 +124,7 @@ class Options {
       hashchange = false,
       history = false,
       recordScreen = false,
-      performance = false
+      performance = false,
     } = switchs;
 
     return {
@@ -144,20 +135,20 @@ class Options {
       hashchange,
       history,
       recordScreen,
-      performance
+      performance,
     };
   }
 
   getHeaders() {
-    const { headers = {} } = this.getReport()
+    const { headers = {} } = this.getReport();
 
-    return isFunction(headers) ? headers() : headers
+    return isFunction(headers) ? headers() : headers;
   }
 
   getUserId() {
-    const { userId } = this.options
+    const { userId } = this.options;
 
-    return isFunction(userId) ? userId() : userId
+    return isFunction(userId) ? userId() : userId;
   }
 
   // getCustomReportFn() {
@@ -186,13 +177,13 @@ export const setupOptions = (o: IOptions) => {
   eventTrack.setOptions({
     cacheType,
     projectKey,
-    maxEvents
+    maxEvents,
   });
   report.setOptions({
     ...reportOptions,
-    userId
+    userId,
   });
-  setLogFlag(log)
+  setLogFlag(log);
 };
 
 export default options;
