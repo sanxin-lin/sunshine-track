@@ -7,7 +7,12 @@ export class Queue {
   constructor() {}
   addFn(fn: voidFunc): void {
     if (typeof fn !== 'function') return;
-    if (!('requestIdleCallback' in _global || 'Promise' in _global)) {
+    if (
+      !(
+        ('requestIdleCallback' in _global && _global.requestIdleCallback) ||
+        ('Promise' in _global && _global.Promise)
+      )
+    ) {
       fn();
       return;
     }
@@ -32,9 +37,9 @@ export class Queue {
   flushStack(): void {
     const temp = this.stack.slice(0);
     this.stack = [];
-    this.isFlushing = false;
     for (let i = 0; i < temp.length; i++) {
       temp[i]();
     }
+    this.isFlushing = false;
   }
 }

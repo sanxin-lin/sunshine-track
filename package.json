@@ -39,6 +39,7 @@
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^8.0.3",
     "js-base64": "^3.7.5",
+    "jsdom": "^25.0.0",
     "lint-staged": "^13.2.3",
     "lodash-es": "^4.17.21",
     "pako": "^2.1.0",
