@@ -46,4 +46,17 @@ describe('utils -> queue.ts', () => {
 
     expect(fn).toHaveBeenCalledTimes(0);
   });
+
+  test('queue isFlushing', async () => {
+    const fn1 = vi.fn();
+    const fn2 = vi.fn();
+    const queue = new Queue();
+    queue.addFn(fn1);
+    queue.addFn(fn2);
+
+    await wait();
+
+    expect(fn1).toHaveBeenCalledTimes(1);
+    expect(fn2).toHaveBeenCalledTimes(1);
+  });
 });
