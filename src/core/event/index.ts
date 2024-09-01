@@ -77,14 +77,20 @@ const EventCollection = {
           isIncludes &&
             eventTrack.add({
               type: EventType.Click,
-              data: data,
+              data: {
+                source: data,
+                elStr: htmlElementAsString(el),
+              },
               status: StatusType.Ok,
               time: getTimestamp(),
             });
         } else if (el.textContent === elementText) {
           eventTrack.add({
             type: EventType.Click,
-            data: data,
+            data: {
+              source: data,
+              elStr: htmlElementAsString(el),
+            },
             status: StatusType.Ok,
             time: getTimestamp(),
           });
@@ -97,7 +103,10 @@ const EventCollection = {
     if (htmlString) {
       eventTrack.add({
         type: EventType.Click,
-        data: htmlString,
+        data: {
+          source: undefined,
+          elStr: htmlElementAsString(el),
+        },
         status: StatusType.Ok,
         time: getTimestamp(),
       });
