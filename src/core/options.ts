@@ -1,11 +1,11 @@
 import { __sunshine_track__, setLogFlag, validTypes } from '../utils';
-import type { CacheType, IOptions, ISwitch, PartialOptions, SwitchMap } from '../types';
+import type { IOptions, ISwitch, PartialOptions, SwitchMap } from '../types';
 import { PropType, EventType } from '../types';
 import eventTrack from './event/event';
-import { merge, isArray, uniqBy, isFunction } from 'lodash-es';
+import { merge, isArray, uniqBy, isFunction, cloneDeep } from 'lodash-es';
 import report from './report';
 
-const getInitOptions = (): IOptions => ({
+export const INIT_OPTIONS: IOptions = {
   projectKey: '',
   userId: '',
   report: {
@@ -19,15 +19,20 @@ const getInitOptions = (): IOptions => ({
   skeletonProject: false,
   maxEvents: 10,
   historyUrlsNum: 3,
-});
+};
 
-class Options {
-  private options: IOptions = getInitOptions();
+export const getInitOptions = (): IOptions => cloneDeep(INIT_OPTIONS);
+
+export class Options {
+  // 用来记录构造函数传进来的配置，可用于重置
+  private initOptions = getInitOptions();
+  private options = getInitOptions();
   private switchMap = {} as SwitchMap;
 
   constructor(options?: IOptions) {
     if (options) {
-      this.options = options;
+      this.initOptions = cloneDeep(options);
+      this.options = cloneDeep(options);
     }
   }
 
@@ -60,14 +65,14 @@ class Options {
     };
   }
 
-  set(o: PartialOptions) {
+  set(o: PartialOptions = {}) {
     const { options } = this;
     this.options = merge(options, o);
     this.setSwitchMap();
     this.validate();
   }
 
-  setSwitchMap() {
+  private setSwitchMap() {
     const {
       xhr,
       fetch,
@@ -89,18 +94,6 @@ class Options {
 
   getSwitchMap() {
     return this.switchMap;
-  }
-
-  setHeaders(headers: Object) {
-    this.options = merge(this.options, { request: { headers } });
-  }
-
-  setCacheType(cacheType: CacheType) {
-    this.options = merge(this.options, { cacheType });
-  }
-
-  reset() {
-    this.options = getInitOptions();
   }
 
   getReport() {
@@ -164,6 +157,10 @@ class Options {
       { field: 'projectKey', type: PropType.String, value: projectKey },
       { field: 'url', type: PropType.Dns, value: url },
     ]);
+  }
+
+  reset() {
+    this.options = cloneDeep(this.initOptions);
   }
 }
 

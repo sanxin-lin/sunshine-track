@@ -1,6 +1,6 @@
 {
   "name": "sunshine-track",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "基于 行为上报，实现了 用户行为、错误监控、页面跳转、页面白屏检测、页面性能检测等上报功能。适用于 Vue、React、Angular 等框架",
   "main": "dist/index.min.js",
   "module": "dist/index.esm.js",
@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "rollup -c -w",
     "build": "rollup -c",
+    "publish": "pnpm run build && pnpm publish",
+    "publish:ignore": "pnpm run build && pnpm publish --no-git-checks",
     "test:dev": "vitest"
   },
   "files": [

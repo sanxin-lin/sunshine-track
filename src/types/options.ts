@@ -1,15 +1,16 @@
+import { DeepPartial } from './base';
 import { EventType, IReportParams } from './event';
 
-type ICustomReport = (data: IReportParams[]) => any
+type ICustomReport = (data: IReportParams[]) => any;
 
 // type ReportType = 'poll' | 'realtime';
 export interface IReportOptions {
   headers?: Object | (() => Object);
   url: string;
-  reportType?: 'img' | 'http' | 'beacon'
+  reportType?: 'img' | 'http' | 'beacon';
   format?: (data: any[]) => any;
   customReport?: ICustomReport;
-  isReport?: (data: any[]) => boolean
+  isReport?: (data: any[]) => boolean;
 }
 
 export type CacheType = 'normal' | 'storage' | 'db';
@@ -30,7 +31,7 @@ export interface ISwitch {
   hashchange: boolean;
   history: boolean;
   recordScreen: boolean;
-  performance: boolean
+  performance: boolean;
 }
 
 export type SwitchMap = Record<EventType, boolean>;
@@ -51,7 +52,6 @@ export interface IOptions {
   historyUrlsNum?: number;
 }
 
-export type PartialOptions = Partial<IOptions>;
+export type PartialOptions = DeepPartial<IOptions>;
 
-
-export type IReportClassOptions = IReportOptions & { userId: UserIdType }
+export type IReportClassOptions = IReportOptions & { userId: UserIdType };

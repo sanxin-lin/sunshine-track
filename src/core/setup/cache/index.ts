@@ -22,7 +22,7 @@ const setupDB = async (projectKey: string) => {
   } catch (e) {
     warning('db is close');
     // indexedDB 报错则关闭
-    options.setCacheType('normal');
+    options.set({ cacheType: 'normal' });
   }
 };
 
