@@ -34,11 +34,13 @@ const handleReport = (el: HTMLElement, bind: any, isMounted?: boolean) => {
     }
     return;
   }
-  eventListener.batchOn({
-    el,
-    eventNames,
-    event: doing,
-  });
+  eventListener.batchOn(
+    eventNames.map(name => ({
+      el,
+      eventName: name,
+      event: doing,
+    })),
+  );
 };
 
 const directive: any = {

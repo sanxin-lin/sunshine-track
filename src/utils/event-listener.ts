@@ -1,5 +1,31 @@
-import { isElement, isFunction, isUndefined } from 'lodash-es';
-import { NATIVE_EVENTS } from '../configs';
+import { isElement, isFunction, isNil } from 'lodash-es';
+
+export const NATIVE_EVENTS = [
+  'click',
+  'dblclick',
+  'keydown',
+  'keyup',
+  'keypress',
+  'mouseenter',
+  'mouseleave',
+  'mousedown',
+  'mouseup',
+  'mousemove',
+  'input',
+  'change',
+  'submit',
+  'focus',
+  'blur',
+  'load',
+  'error',
+  'scroll',
+  'visibilitychange',
+  'popstate',
+  'replaceState',
+  'pushState',
+  'unhandledrejection',
+  'loadend',
+];
 
 type Event = (e?: any) => void;
 
@@ -40,7 +66,7 @@ export class EventListener {
     });
     if (!validate) return;
     let eventMap = this.map.get(el);
-    if (isUndefined(eventMap)) {
+    if (isNil(eventMap)) {
       eventMap = {};
     }
     el.addEventListener(eventName, event);
@@ -48,23 +74,20 @@ export class EventListener {
     this.map.set(el, eventMap);
   }
 
-  batchOn({
-    el,
-    eventNames = [],
-    event,
-  }: Pick<IParams, 'el' | 'event'> & { eventNames: string[] }) {
-    eventNames.forEach(eventName =>
+  batchOn(ons: (Pick<IParams, 'el' | 'event'> & { eventName: string })[]) {
+    ons.forEach(on => {
+      const { el, event, eventName } = on;
       this.on({
         el,
         eventName,
         event,
-      }),
-    );
+      });
+    });
   }
 
   remove({ el, eventName }: Pick<IParams, 'el' | 'eventName'>) {
     const eventMap = this.map.get(el);
-    if (!isUndefined(eventMap)) {
+    if (!isNil(eventMap)) {
       const event = eventMap[eventName];
       el.removeEventListener(eventName, event);
       delete eventMap[eventName];
@@ -73,7 +96,7 @@ export class EventListener {
 
   removeAllWithEl(el: IParams['el']) {
     const eventMap = this.map.get(el);
-    if (!isUndefined(eventMap)) {
+    if (!isNil(eventMap)) {
       const eventNames = Object.keys(eventMap);
       eventNames.forEach(eventName => this.remove({ el, eventName }));
       this.map.delete(el);
